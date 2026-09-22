@@ -1,5 +1,9 @@
 # Laravel Spam Guard
 
+![Laravel Spam Guard — content-based spam detection powered by TypeSafe Jev, with allow, review, and block decisions](https://raw.githubusercontent.com/vlados/laravel-spam-guard/main/docs/images/banner.png)
+
+*Illustration: the package checks submitted content; behaviour signals and threat-intelligence feeds are not included. Your application handles review and delivery.*
+
 [![Tests](https://github.com/vlados/laravel-spam-guard/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/vlados/laravel-spam-guard/actions/workflows/tests.yml)
 [![Latest stable version](https://img.shields.io/packagist/v/vlados/laravel-spam-guard)](https://packagist.org/packages/vlados/laravel-spam-guard)
 [![Total downloads](https://img.shields.io/packagist/dt/vlados/laravel-spam-guard)](https://packagist.org/packages/vlados/laravel-spam-guard/stats)
