@@ -1,6 +1,6 @@
 {
     "name": "vlados/laravel-spam-guard",
-    "description": "Content-based spam detection as a Laravel validation rule, powered by TypeSafe Jev.",
+    "description": "Content-based spam detection powered by TypeSafe Jev, with optional Turnstile bot protection for Laravel.",
     "type": "library",
     "license": "MIT",
     "homepage": "https://github.com/vlados/laravel-spam-guard",
@@ -8,7 +8,7 @@
         "issues": "https://github.com/vlados/laravel-spam-guard/issues",
         "source": "https://github.com/vlados/laravel-spam-guard"
     },
-    "keywords": ["laravel", "spam", "validation", "typesafe"],
+    "keywords": ["laravel", "spam", "validation", "typesafe", "turnstile", "bot-protection"],
     "authors": [{"name": "Vladislav Stoitsov", "email": "dev@vladko.dev"}],
     "require": {
         "php": "^8.2",

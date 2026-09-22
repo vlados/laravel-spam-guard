@@ -8,7 +8,7 @@
 [![PHP version](https://img.shields.io/packagist/dependency-v/vlados/laravel-spam-guard/php)](https://github.com/vlados/laravel-spam-guard/blob/main/composer.json)
 [![License](https://img.shields.io/packagist/l/vlados/laravel-spam-guard)](LICENSE)
 
-Check form content for spam with a Laravel validation rule, powered by TypeSafe's Jev. Describe your form, choose a probability threshold, and keep control of how outages affect submissions. No browser widget is required.
+Check form content for spam with a Laravel validation rule, powered by TypeSafe's Jev. Describe your form, choose a probability threshold, and keep control of how outages affect submissions. No browser widget is required for spam checks. Add [optional Turnstile protection](#optional-bot-protection) to verify a browser challenge separately.
 
 ```php
 use Vlados\LaravelSpamGuard\Rules\NotSpam;
@@ -74,7 +74,7 @@ The TypeSafe API is a separately billed service. See the [changelog](CHANGELOG.m
 
 ## Form purpose and selected fields
 
-Attach the rule to one text field. By default, only that field's name and value leave your application. Other request fields, identity, IP addresses, and headers are never collected automatically.
+Attach the rule to one text field. For content checks, only that field's name and value leave your application by default. Other request fields, identity, IP addresses, and headers are never collected automatically by the content checker.
 
 ```php
 'description' => [
@@ -103,6 +103,74 @@ validator($data, ['description' => [new NotSpam]])->validate();
 ```
 
 The rule is not implicit: use `required`, `nullable`, and `string` according to your form's needs. Laravel skips the check for empty or absent optional values.
+
+## Optional bot protection
+
+Add `Vlados\LaravelSpamGuard\Rules\Turnstile` to opt a form into Cloudflare Turnstile. Existing `NotSpam` and `SpamGuard` checks remain unchanged, and no new dependency is required. Passing the challenge is an additional anti-bot signal; it does not establish a person's identity or classify their content as legitimate.
+
+Create a Turnstile widget for your site's hostname in Cloudflare, then set:
+
+```dotenv
+TURNSTILE_SITE_KEY=your-public-site-key
+TURNSTILE_SECRET_KEY=your-secret-key
+TURNSTILE_HOSTNAME=example.com
+```
+
+The hostname must be one exact, application-controlled hostname, without a scheme or port. Keep the secret key on the server. If you already published `config/spam-guard.php`, add this entry manually:
+
+```php
+'turnstile' => [
+    'site_key' => env('TURNSTILE_SITE_KEY'),
+    'secret_key' => env('TURNSTILE_SECRET_KEY'),
+    'hostname' => env('TURNSTILE_HOSTNAME'),
+    'timeout' => 5.0,
+    'connect_timeout' => 2.0,
+],
+```
+
+Include the widget inside your existing Blade form and load the script once:
+
+```blade
+<div
+    id="contact-turnstile"
+    class="cf-turnstile"
+    data-sitekey="{{ config('spam-guard.turnstile.site_key') }}"
+    data-action="contact"
+></div>
+@error('cf-turnstile-response')
+    <p role="alert">{{ $message }}</p>
+@enderror
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+```
+
+The widget supplies the `cf-turnstile-response` form field. Match its `data-action` to the rule's action. See Cloudflare's [widget configuration](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/widget-configurations/) for rendering options.
+
+Run cheap validation first, then verify the token, then call the content checker:
+
+```php
+use Vlados\LaravelSpamGuard\Rules\NotSpam;
+use Vlados\LaravelSpamGuard\Rules\Turnstile;
+
+$data = $request->validate([
+    'description' => ['required', 'string', 'max:5000'],
+    'email' => ['required', 'email'],
+]);
+
+$request->validate([
+    'cf-turnstile-response' => [new Turnstile('contact')],
+]);
+
+validator($data, ['description' => [new NotSpam]])->validate();
+```
+
+`Turnstile::make('contact')` is equivalent. The rule is implicit: missing or empty tokens fail without needing `required`. Do not add `sometimes` or exclusion rules that skip protection. Separate stages prevent an invalid challenge from triggering a paid content check; `bail` alone only stops rules on the same attribute. Keep rate limiting ahead of these stages.
+
+The rule verifies the token server-side and requires `success: true`, the configured hostname, and the expected action. It always rejects submissions when verification is rejected or unavailable, independently of the content checker's `fail_open` setting. English and Bulgarian messages distinguish a rejected challenge from unavailable verification.
+
+Tokens expire after five minutes and can be verified only once. If an AJAX submission stays on the page, reset the widget before retrying after verification or a later spam-validation failure. A new attempt needs a fresh token. With [programmatic rendering](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/#explicit-rendering), keep the ID returned by `turnstile.render()` and call `turnstile.reset(widgetId)`. See Cloudflare's [server-side validation contract](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/).
+
+For Livewire, synchronize the widget's token into a component property and validate it only inside the submit action, after cheap validation. Clear that property and reset the widget after a consumed token. For Precognition, omit the Turnstile rule from precognitive requests and run it on the final submission only. The rule does not automatically skip either framework's intermediate requests.
 
 ## Direct checks and shadow evaluation
 
@@ -198,6 +266,23 @@ The sequence is consumed in order. Exhaustion throws `OutOfBoundsException`, eve
 
 `SpamGuard::assertNothingChecked()` asserts that no valid check reached the fake. Fake assertions use the application's PHPUnit installation. Fakes also replace the container binding, so subsequent injected services and rules use the same fake.
 
+Turnstile verification is separate from `SpamGuard::fake()`. Fake its HTTP response with the configured hostname and the form's expected action:
+
+```php
+config(['spam-guard.turnstile.secret_key' => 'test-secret']);
+config(['spam-guard.turnstile.hostname' => 'example.com']);
+
+Http::fake([
+    'https://challenges.cloudflare.com/turnstile/v0/siteverify' => Http::response([
+        'success' => true,
+        'hostname' => 'example.com',
+        'action' => 'contact',
+    ]),
+]);
+```
+
+Submit a nonempty token in your test request, and keep `Http::preventStrayRequests()` enabled. Exercise rejected and unavailable responses too; neither should reach the content checker in the staged example above.
+
 ## Submit-only Livewire checks
 
 Use submit-time validation with no update-triggered expensive rule:
@@ -259,6 +344,8 @@ Edit `lang/vendor/spam-guard/{locale}/validation.php`. Running `lang:publish` fi
 ## Privacy and limitations
 
 State is sent over HTTPS to TypeSafe at `https://api.typesafe.ai/v1/systemone`, together with the form purpose and spam criteria. The package does not persist submissions. Free text can still identify people even when no dedicated identity fields are selected. Application-side preprocessing is your responsibility; there is no built-in redaction engine.
+
+Optional Turnstile protection adds Cloudflare as a separate service. Its server-side request sends the secret key and challenge token, without automatically collecting or forwarding visitor IP addresses or request headers. The browser widget also communicates with Cloudflare; the content checker's selected-field privacy boundary does not cover that browser activity. Account for the widget in your application's privacy notice and service review.
 
 The supplied research identifies US hosting and enterprise-specific zero-data-retention terms. Do not assume a standard account has zero retention or an EU endpoint. Review TypeSafe's current [privacy policy](https://typesafe.ai/legal/privacy-policy), [DPA](https://typesafe.ai/legal/data-processing), and [legal documentation](https://docs.typesafe.ai/legal) for your account. Your application remains responsible for its privacy notice, lawful processing, minimization, retention decisions, and applicable transfer arrangements.
 

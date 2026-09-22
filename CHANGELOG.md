@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.0](https://github.com/vlados/laravel-spam-guard/releases/tag/v1.1.0) - 2026-09-22
+
+- Add optional Turnstile validation with server-side hostname and action checks, required tokens, and separate English/Bulgarian messages for rejected and unavailable verification.
+- Keep bot protection independent of content classification and always reject when challenge verification is unavailable.
+- Document widget setup, staged validation before paid spam checks, submit-only integration, token renewal, and HTTP fakes.
+
 ## [1.0.0](https://github.com/vlados/laravel-spam-guard/releases/tag/v1.0.0) - 2026-09-22
 
 Initial stable release.

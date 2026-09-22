@@ -9,4 +9,11 @@ return [
     'timeout' => 2.0,
     'connect_timeout' => 1.0,
     'max_state_chars' => 10_000,
+    'turnstile' => [
+        'site_key' => env('TURNSTILE_SITE_KEY'),
+        'secret_key' => env('TURNSTILE_SECRET_KEY'),
+        'hostname' => env('TURNSTILE_HOSTNAME'),
+        'timeout' => 5.0,
+        'connect_timeout' => 2.0,
+    ],
 ];
