@@ -1,5 +1,11 @@
 # Laravel Spam Guard
 
+[![Tests](https://github.com/vlados/laravel-spam-guard/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/vlados/laravel-spam-guard/actions/workflows/tests.yml)
+[![Latest stable version](https://img.shields.io/packagist/v/vlados/laravel-spam-guard)](https://packagist.org/packages/vlados/laravel-spam-guard)
+[![Total downloads](https://img.shields.io/packagist/dt/vlados/laravel-spam-guard)](https://packagist.org/packages/vlados/laravel-spam-guard/stats)
+[![PHP version](https://img.shields.io/packagist/dependency-v/vlados/laravel-spam-guard/php)](https://github.com/vlados/laravel-spam-guard/blob/main/composer.json)
+[![License](https://img.shields.io/packagist/l/vlados/laravel-spam-guard)](LICENSE)
+
 Check form content for spam with a Laravel validation rule, powered by TypeSafe's Jev. Describe your form, choose a probability threshold, and keep control of how outages affect submissions. No browser widget is required.
 
 ```php
