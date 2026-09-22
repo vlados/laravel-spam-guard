@@ -1,0 +1,96 @@
+{
+  "finished_at": "2026-09-22T11:04:38.375439+00:00",
+  "live_calls": 560,
+  "authorized_ceiling": 2000,
+  "stopped_early_at_user_request": true,
+  "remaining_paid_batches_cancelled": true,
+  "baseline_calls": 130,
+  "candidate_calls": 430,
+  "candidate_decisions": {
+    "spam": {
+      "block": 247,
+      "review": 57
+    },
+    "legitimate": {
+      "allow": 114,
+      "review": 12
+    }
+  },
+  "per_phase": {
+    "expanded-dev-baseline": {
+      "spam": {
+        "block": 17,
+        "review": 7
+      },
+      "legitimate": {
+        "allow": 24,
+        "review": 2
+      }
+    },
+    "expanded-dev-candidate": {
+      "spam": {
+        "block": 22,
+        "review": 2
+      },
+      "legitimate": {
+        "allow": 25,
+        "review": 1
+      }
+    },
+    "holdout-baseline": {
+      "spam": {
+        "review": 16,
+        "block": 24
+      },
+      "legitimate": {
+        "allow": 35,
+        "review": 5
+      }
+    },
+    "holdout-candidate": {
+      "spam": {
+        "block": 38,
+        "review": 2
+      },
+      "legitimate": {
+        "allow": 39,
+        "review": 1
+      }
+    },
+    "mutations-000": {
+      "spam": {
+        "block": 89,
+        "review": 11
+      },
+      "legitimate": {}
+    },
+    "mutations-100": {
+      "spam": {
+        "block": 64,
+        "review": 36
+      },
+      "legitimate": {}
+    },
+    "mutations-200": {
+      "spam": {
+        "block": 34,
+        "review": 6
+      },
+      "legitimate": {
+        "allow": 50,
+        "review": 10
+      }
+    }
+  },
+  "provider_errors": 0,
+  "input_tokens": 425022,
+  "production_question_matches_frozen_candidate": true,
+  "review_threshold": 0.2,
+  "block_threshold": 0.9,
+  "limitations": [
+    "Synthetic and correlated cases, not a population estimate.",
+    "No real customer-data validation.",
+    "60 remaining mutation controls and all 40 stress cases were not run live.",
+    "Review queue and delivery integration belong to the consuming application."
+  ]
+}

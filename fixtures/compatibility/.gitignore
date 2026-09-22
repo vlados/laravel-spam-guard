@@ -1,0 +1,6 @@
+/vendor/
+/composer.lock
+/bootstrap/cache/
+/storage/
+/config/
+/lang/

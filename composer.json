@@ -1,0 +1,35 @@
+{
+    "name": "vlados/laravel-spam-guard",
+    "description": "Content-based spam detection as a Laravel validation rule, powered by TypeSafe Jev.",
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://github.com/vlados/laravel-spam-guard",
+    "support": {
+        "issues": "https://github.com/vlados/laravel-spam-guard/issues",
+        "source": "https://github.com/vlados/laravel-spam-guard"
+    },
+    "keywords": ["laravel", "spam", "validation", "typesafe"],
+    "authors": [{"name": "Vladislav Stoitsov", "email": "dev@vladko.dev"}],
+    "require": {
+        "php": "^8.2",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "guzzlehttp/guzzle": "^7.8",
+        "illuminate/contracts": "^11.0 || ^12.0 || ^13.0",
+        "illuminate/http": "^11.0 || ^12.0 || ^13.0",
+        "illuminate/support": "^11.0 || ^12.0 || ^13.0",
+        "psr/log": "^3.0"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.0",
+        "livewire/livewire": "^4.0",
+        "orchestra/testbench": "^9.0 || ^10.0 || ^11.0",
+        "pestphp/pest": "^3.0"
+    },
+    "autoload": {"psr-4": {"Vlados\\LaravelSpamGuard\\": "src/"}},
+    "autoload-dev": {"psr-4": {"Vlados\\LaravelSpamGuard\\Tests\\": "tests/"}},
+    "extra": {"laravel": {"providers": ["Vlados\\LaravelSpamGuard\\SpamGuardServiceProvider"]}},
+    "config": {"sort-packages": true, "allow-plugins": {"pestphp/pest-plugin": true}},
+    "scripts": {"test": "pest", "format": "pint", "lint": "pint --test"}
+}

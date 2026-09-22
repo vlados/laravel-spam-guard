@@ -1,0 +1,50 @@
+{
+    "started_at": "2026-09-22T10:37:01+00:00",
+    "synthetic_only": true,
+    "configuration": {
+        "context": "Public contact form",
+        "threshold": 0.9,
+        "fail_open": true,
+        "model": "jev-1.13.0",
+        "timeout": 2,
+        "connect_timeout": 1,
+        "max_state_chars": 10000
+    },
+    "question_sha256": "ed59461cd23c39ef9cdaf287255a160c77d34f6dbb7352e29e4638ffbb86d185",
+    "planned_checks": 2,
+    "results": [
+        {
+            "id": "legit_bg_short",
+            "expected": "legitimate",
+            "vector": "control",
+            "data": {
+                "description": "Имате ли накладки за BMW E46 320d, 2003 г.? Цена и доставка до Пловдив?"
+            },
+            "iteration": 1,
+            "accepted": true,
+            "probability": null,
+            "error": "connection",
+            "model": null,
+            "input_tokens": null,
+            "duration_ms": 20.341416,
+            "outcome": "unavailable"
+        },
+        {
+            "id": "spam_plain_en",
+            "expected": "spam",
+            "vector": "plain promotion",
+            "data": {
+                "description": "Buy backlinks and casino traffic now! Guaranteed first-page rankings. Order at https://promo.example.invalid/deal."
+            },
+            "iteration": 1,
+            "accepted": true,
+            "probability": null,
+            "error": "connection",
+            "model": null,
+            "input_tokens": null,
+            "duration_ms": 1.05,
+            "outcome": "unavailable"
+        }
+    ],
+    "completed_at": "2026-09-22T10:37:02+00:00"
+}

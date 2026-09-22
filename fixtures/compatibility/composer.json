@@ -1,0 +1,13 @@
+{
+    "name": "vlados/spam-guard-compatibility-fixture",
+    "description": "Test-only consumer fixture for minimum Laravel versions.",
+    "license": "MIT",
+    "require": {
+        "laravel/framework": "11.0.* || 12.0.* || 13.0.*",
+        "vlados/laravel-spam-guard": "dev-main"
+    },
+    "repositories": [{"type": "path", "url": "../..", "options": {"symlink": true, "versions": {"vlados/laravel-spam-guard": "dev-main"}}}],
+    "config": {"allow-plugins": false},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

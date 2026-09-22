@@ -1,0 +1,11 @@
+{
+  "created_before_evaluation": true,
+  "development_cases": 50,
+  "holdout_cases": 80,
+  "files": {
+    "adversarial-development.json": "699cd76a47bdf174cb4eb450dc3732961a3dfcd6a45fdf6d064d2f2d459fd571",
+    "adversarial-holdout.json": "8e8783ae3e0f626a637da521d20b98d8dded4f801771c88813f0ff62bd637ec7",
+    "questions/mixed-content.json": "bb38ef120a440af745546b00149ca328652b6de08da8d297910ac4521a0f7ad8"
+  },
+  "limitations": "Synthetic, authored by the same evaluator; holdout predictions unseen, not a representative independent production sample."
+}

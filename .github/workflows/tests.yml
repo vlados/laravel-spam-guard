@@ -1,0 +1,64 @@
+name: Tests
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { php: '8.2', laravel: '^11.0', testbench: '^9.0' }
+          - { php: '8.3', laravel: '^11.0', testbench: '^9.0' }
+          - { php: '8.4', laravel: '^11.0', testbench: '^9.0' }
+          - { php: '8.2', laravel: '^12.0', testbench: '^10.0' }
+          - { php: '8.3', laravel: '^12.0', testbench: '^10.0' }
+          - { php: '8.4', laravel: '^12.0', testbench: '^10.0' }
+          - { php: '8.3', laravel: '^13.0', testbench: '^11.0' }
+          - { php: '8.4', laravel: '^13.0', testbench: '^11.0' }
+    name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, dom, curl, sqlite3, pdo_sqlite
+          coverage: none
+      - run: composer require --dev --no-update "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}"
+      - if: matrix.laravel != '^11.0'
+        run: composer update --prefer-dist --no-interaction
+      # Laravel 11 is unsupported; this isolated job checks compatibility only.
+      - if: matrix.laravel == '^11.0'
+        run: composer update --prefer-dist --no-interaction --no-security-blocking
+      - run: composer test
+      - run: composer lint
+
+  compatibility:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { php: '8.2', laravel: '11.0.0', console: '7.0.*' }
+          - { php: '8.2', laravel: '12.0.0', console: '7.2.*' }
+          - { php: '8.3', laravel: '13.0.0', console: '7.4.*' }
+    name: Consumer floor ${{ matrix.laravel }} / PHP ${{ matrix.php }}
+    defaults:
+      run:
+        working-directory: fixtures/compatibility
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, dom, curl, sqlite3, pdo_sqlite
+          coverage: none
+      # Older framework commands need their contemporary Symfony Console line.
+      - run: composer require --no-update "laravel/framework:${{ matrix.laravel }}" "symfony/console:${{ matrix.console }}"
+      # Deliberately test historical framework floors, never deploy this fixture.
+      - run: composer update --prefer-dist --no-interaction --no-security-blocking
+      - run: php check.php

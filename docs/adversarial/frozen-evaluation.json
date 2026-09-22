@@ -1,0 +1,13 @@
+{
+  "frozen_at": "2026-09-22T10:52:45.669702+00:00",
+  "question": "mixed-content",
+  "question_file_sha256": "bb38ef120a440af745546b00149ca328652b6de08da8d297910ac4521a0f7ad8",
+  "holdout_sha256": "8e8783ae3e0f626a637da521d20b98d8dded4f801771c88813f0ff62bd637ec7",
+  "review_threshold": 0.2,
+  "block_threshold": 0.9,
+  "unavailable": "review",
+  "automatic_delivery": "allow only",
+  "development_calls_completed": 100,
+  "maximum_additional_live_calls_authorized": 2000,
+  "holdout_not_yet_evaluated": true
+}

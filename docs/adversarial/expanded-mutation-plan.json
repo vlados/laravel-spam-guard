@@ -1,0 +1,5 @@
+{
+  "mutations_sha256": "9d9c5d904b1bad9a7a69325ebbdf9b17ab2047066369da6ce670bafc07f61e8d",
+  "stress_sha256": "8adf32f5cf438d92c388929133aa5505fef540a185f0034490a058ed1442e6bf",
+  "note": "Mutation rows share parent messages and are not independent accuracy samples. Review labels represent ambiguous content, excluded from binary accuracy."
+}
