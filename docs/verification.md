@@ -1,4 +1,6 @@
-# Local verification — 22 September 2026
+# Initial local verification — 22 September 2026
+
+This is the initial 98-test verification snapshot. The subsequent [expanded verification and adversarial report](adversarial/expanded-report.md) records the final 148-test suite and live evaluation. Current hosted checks are available in [GitHub Actions](https://github.com/vlados/laravel-spam-guard/actions).
 
 The v1 implementation was verified without live TypeSafe requests or API credentials. HTTP fixtures use Laravel's HTTP fake with stray requests prevented.
 
@@ -39,10 +41,10 @@ Historical floor fixtures and Laravel 11 test installations require Composer's s
 - `composer validate --strict`: passed for the package and consumer fixture manifests.
 - Workflow YAML parsed successfully: eight package-suite jobs plus three consumer-floor jobs.
 
-## Not executed
+## Not executed at this initial checkpoint
 
 - PHP 8.3 jobs and hosted GitHub Actions. Those jobs are defined in the workflow.
 - Live TypeSafe classification, Bulgarian accuracy evaluation, or latency/cost benchmarks.
 - Package publication or application deployment.
 
-This verifies integration behavior and compatibility, not model quality. The package remains unreleased.
+This checkpoint verifies integration behavior and compatibility, not model quality. See the [changelog](../CHANGELOG.md) for release status.
